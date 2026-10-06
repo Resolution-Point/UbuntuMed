@@ -2,133 +2,271 @@
 
 **Smart medicine stock help for public clinics**
 
-> *"Ubuntu" — I am because we are. Better medicine availability for all.*
+> _"Ubuntu" — I am because we are. Better medicine availability for all._
 
-## What is this project?
+---
 
-This is a student project for the module **AI for Business Analysis with Python**.  
-We are building a computer program that helps public clinics manage medicine better.  
-It predicts which medicines will be needed, warns when stock may run out, and suggests moving extra medicine to another clinic before it expires.
+## What is UbuntuMed?
 
-## The problem 
+UbuntuMed is an AI-powered tool that helps public clinics and private pharmacies:
 
-Public clinics sometimes run out of important medicines like HIV medicine (ARVs), TB medicine, and blood pressure tablets.  
-At the same time, other clinics throw away medicines because they expire.  
-Nurses are very busy. They cannot always check stock, predict future needs, or move medicine between clinics quickly.  
-Patients then miss doses or travel far to find medicine.
+- **Predict** how much medicine each facility will need.
+- **Warn** when stock is about to run out or expire.
+- **Recommend** moving extra medicine between facilities before it is wasted.
+- **Answer** simple questions in plain language through a chatbot.
 
-## Our solution
+We are **not** replacing existing systems like SVS or RxSolution.
+We are adding a smart, predictive layer on top of them.
 
-We are **not** replacing the systems clinics already use (such as SVS and RxSolution).  
-We are adding a smart helper on top of them.
+---
 
-Our program will:
+## Why This Matters
 
-- Learn from real medicine use and stock data.
-- Predict how much medicine each clinic will need.
-- Warn about possible stockouts.
-- Warn about medicines that will expire soon.
-- Suggest moving medicine between nearby clinics.
-- Find strange changes in medicine use.
-- Let staff ask simple questions in a chat.
-- Show a simple dashboard for managers.
+| Problem                                                                              | Evidence                              |
+| ------------------------------------------------------------------------------------ | ------------------------------------- |
+| Stockouts affected 85.6% of medicines                                                | Mabizela et al. (2023), KwaZulu-Natal |
+| Overstocking affected 50.6% of medicines                                             | Same study                            |
+| Expiry-related wastage affected 15.2%                                                | Same study                            |
+| Overstocking and short-dated stock explained 68% of real redistribution transactions | Same study                            |
+| AI-based platforms in Uganda reduced stockouts and overstocking by over 40%          | BMJ rapid response (2025)             |
 
-## Who it helps
+---
 
-- Clinic nurses
-- Clinic managers
-- District health managers
-- Patients who need chronic medicine
-- Local government health budgets
+## Architecture
 
-## How it works
+[React Frontend]
+|
+| REST API
+v
+[FastAPI Backend]
+| | |
+v v v
+[Postgres] [ML Models] [Chatbot NLP]
 
-1. Clinics record stock, medicine use, and expiry dates (via SVS, RxSolution, or paper records).
-2. Our program cleans and organizes the data.
-3. It looks for patterns in past medicine use.
-4. It predicts how much medicine each clinic will need.
-5. It checks stock levels and expiry dates.
-6. It suggests which clinic should send medicine to which clinic.
-7. It sends warnings before a stockout or expiry problem.
-8. Staff can ask questions like:  
-   *"How many ARVs are left at Clinic A?"*  
-   *"What is the TB medicine forecast for next month?"*
-9. Managers can approve or reject suggestions.
+- **Backend:** FastAPI (Python)
+- **Frontend:** React + Vite + Tailwind CSS
+- **ML Models:** Prophet/ARIMA, TensorFlow autoencoder, spaCy intent classifier
+- **Database:** SQLite for development, PostgreSQL for production
+- **Deployment:** Render (backend), Vercel (frontend)
 
-## Main features
+---
 
-- Medicine demand prediction
-- Stockout warnings
-- Expiry warnings
-- Redistribution suggestions
-- Unusual pattern detection
-- Simple chatbot
-- Manager dashboard
+## Repository Structure
 
-## Data — we are using REAL data
+ubuntumed/
+├── backend/ # FastAPI application
+│ ├── app/
+│ │ ├── api/ # API routes
+│ │ ├── core/ # Config, database
+│ │ ├── models/ # SQLAlchemy models
+│ │ ├── schemas/ # Pydantic schemas
+│ │ ├── services/ # Business logic
+│ │ ├── ml/ # ML model loading and inference
+│ │ └── utils/ # Helpers
+│ └── tests/ # Backend tests
+├── frontend/ # React application
+│ └── src/
+│ ├── components/
+│ ├── pages/
+│ ├── services/ # API calls
+│ ├── hooks/
+│ └── context/
+├── data/
+│ ├── raw/ # Original datasets (DHB, Zenodo, Kaggle)
+│ ├── processed/ # Cleaned data
+│ └── external/ # Reference stats, POPIA docs
+├── notebooks/ # Jupyter notebooks for EDA
+├── ml_training/ # Training scripts + saved models
+├── docs/ # Project documentation
+└── .github/ # GitHub templates + workflows
 
-We are committed to using **real South African public health data** wherever possible.
+---
 
-### Data sources we are pursuing
+## Data Sources
 
-| Source | What it provides | Status |
-|---|---|---|
-| Mabizela et al. (2023) study | 392 medicines, 8 facilities in KwaZulu-Natal; stockout, overstocking, and expiry statistics | Contacting authors |
-| District Health Barometer (Health Systems Trust) | District-level medicine availability indicators (CSV) | Downloaded 2018/19 |
-| Stop Stockouts Project reports | Facility-level stockout survey data | Reviewing published reports |
-| National Surveillance Centre (NSC) | Real-time medicine availability dashboards (SVS + RxSolution) | Requesting access via university |
-| Department of Health | Potential anonymised SVS/RxSolution extracts | Preparing formal request |
+| Dataset                                 | What It Provides                                                                 | Source                            |
+| --------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------- |
+| **District Health Barometer (2018/19)** | Real district-level medicine availability indicators                             | openAFRICA / Health Systems Trust |
+| **Zenodo PLMIF**                        | Supply chain risk variables (port delays, spoilage, risk score) for South Africa | Zenodo                            |
+| **Kaggle Pharmacy Dataset**             | Weekly demand, stock-on-hand, and stockout flags                                 | Kaggle                            |
 
-### Data we need
+See `docs/data_sources.md` for full details.
 
-- Medicine stock levels (per facility)
-- Medicine use / dispensing records
-- Expiry dates and batch numbers
-- Clinic locations and catchment data
-- Seasonal illness patterns
-- Supplier delivery times
-- Medicine redistribution records
-- Staff queries (for chatbot training)
+---
 
-### Privacy and ethics
+## Tech Stack
 
-All data used will be anonymised. No patient-level data will be used.  
-We will comply with POPIA (Protection of Personal Information Act).  
-Any data request will be made through the university with proper academic justification.
+| Tool                | Purpose                              |
+| ------------------- | ------------------------------------ |
+| Python              | Main language                        |
+| FastAPI             | Backend API                          |
+| React + Vite        | Frontend                             |
+| Tailwind CSS        | UI styling                           |
+| pandas / NumPy      | Data processing                      |
+| Prophet / ARIMA     | Demand forecasting                   |
+| scikit-learn        | Optimisation and classification      |
+| TensorFlow / Keras  | Anomaly detection                    |
+| spaCy               | Chatbot NLP                          |
+| SQLite / PostgreSQL | Database                             |
+| Docker              | Containerisation                     |
+| GitHub              | Version control and project tracking |
 
-## Tech stack
+---
 
-| Tool | Why we use it |
-|---|---|
-| Python | Main programming language |
-| pandas | Clean and organize data |
-| NumPy | Work with numbers and arrays |
-| Prophet / statsmodels (ARIMA) | Learn past patterns and predict future medicine needs |
-| scikit-learn | Help choose the best way to move medicine |
-| TensorFlow / Keras | Find unusual patterns in medicine use |
-| spaCy | Understand simple questions in the chatbot |
-| Streamlit | Build a simple web dashboard |
-| Plotly | Make charts and graphs |
-| SQLite | Small local database for the prototype |
-| GitHub | Store code, track tasks, and work as a team |
+## Team Workflow
 
-## Project goals
+**Every task follows this chain:**
 
-- Reduce medicine stockouts
-- Reduce expired medicine waste
-- Save money for public health
-- Save nurses time
-- Help patients get medicine without delays
+1. Pick an **Issue** from the GitHub Project board.
+2. Create a **branch**: `feature/<issue-number>-short-description`.
+3. **Commit** with meaningful messages: `feat(forecast): add Prophet model (#5)`.
+4. Open a **Pull Request** and link the issue (`Closes #5`).
+5. Get a **review** from another member.
+6. **Merge** to `dev`, then to `main` at the end of the sprint.
 
-## How we will know it works
+**Rules:**
 
-- Forecast error below 15%
-- Stockouts reduced by at least 20% in tests
-- Expiry waste reduced by at least 15% in tests
-- Chatbot understands at least 85% of test questions
-- At least 80% of test users say it is helpful
+- No direct pushes to `main` or `dev`.
+- Every PR needs at least one review.
+- Every Sunday, we update `docs/contributions.md`.
 
+---
 
+## Getting Started (Local Development)
 
-## Folder structure (planned)
+### Backend
 
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate        # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+Backend runs at http://localhost:8000
+API docs at http://localhost:8000/docs
+
+cd frontend
+npm install
+npm run dev
+Frontend runs at http://localhost:5173
+
+Docker (Full Stack)
+docker-compose up --build
+
+---
+
+Documentation
+All project documents are in docs/:
+
+proposal.md — Project proposal
+
+problem_definition.md — Problem statement
+
+requirements.md — Functional and non-functional requirements
+
+data_sources.md — Dataset descriptions and sources
+
+data_dictionary.md — Column definitions for each dataset
+
+architecture.md — System architecture
+
+contributions.md — Weekly contribution log
+
+deployment.md — Deployment instructions
+
+---
+
+---
+
+#### File 5: `docs/architecture.md`
+
+```markdown
+# UbuntuMed — System Architecture
+
+## Overview
+
+UbuntuMed is a three-layer system:
+
+1. **Presentation Layer (Frontend)** — React web app for clinic managers and nurses.
+2. **Application Layer (Backend)** — FastAPI server that handles business logic and serves ML predictions.
+3. **Data & Model Layer** — Databases, cleaned datasets, and trained ML models.
+
+## Diagram
+
++---------------------------+
+| React Frontend (Vercel) |
+| Dashboard | Chatbot | UI |
++-------------+-------------+
+|
+| HTTPS / REST
+v
++---------------------------+
+| FastAPI Backend (Render) |
+| /stock /forecast |
+| /anomaly /redistribute |
+| /chatbot |
++------+----------+---------+
+| | |
+v v v
++-----------+ +--------+ +-----------+
+| Postgres | | ML | | NLP |
+| Database | | Models | | Chatbot |
++-----------+ +--------+ +-----------+
+```
+
+## Components
+
+### Frontend
+
+- **Framework:** React + Vite
+- **Styling:** Tailwind CSS
+- **Charts:** Recharts
+- **State:** React Context / hooks
+- **API calls:** Axios
+
+### Backend
+
+- **Framework:** FastAPI
+- **ORM:** SQLAlchemy
+- **Validation:** Pydantic
+- **Auth:** JWT (future)
+- **CORS:** Enabled for frontend URL
+
+### ML Models
+
+- **Forecasting:** Prophet / ARIMA (saved as `.pkl`)
+- **Anomaly Detection:** Autoencoder (saved as `.h5`)
+- **Redistribution:** scikit-learn logic (function-based)
+- **Chatbot NLP:** spaCy / scikit-learn intent classifier (`.pkl`)
+
+### Data
+
+- **Raw:** DHB, Zenodo PLMIF, Kaggle pharmacy
+- **Processed:** Cleaned and feature-engineered CSVs
+- **Database:** SQLite (dev) / PostgreSQL (prod)
+
+## Data Flow
+
+1. Raw datasets are cleaned by `data_cleaning.py`.
+2. Cleaned data is stored in `data/processed/` and loaded into the database.
+3. ML training scripts read cleaned data and save models to `ml_training/saved_models/`.
+4. FastAPI loads models at startup.
+5. Frontend calls API endpoints and displays results.
+
+## Deployment
+
+| Layer    | Platform           | URL                           |
+| -------- | ------------------ | ----------------------------- |
+| Frontend | Vercel             | `ubuntumed.vercel.app`        |
+| Backend  | Render             | `ubuntumed-api.onrender.com`  |
+| Database | Supabase / Railway | (connection string in `.env`) |
+
+## Security & Privacy
+
+- POPIA compliance: no patient-level data.
+- All data anonymised at facility level.
+- HTTPS only in production.
+- Environment variables for secrets.
+- CORS restricted to frontend URL.

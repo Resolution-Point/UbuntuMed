@@ -1,0 +1,72 @@
+# Go to project root
+Set-Location "C:\Users\DELL\OneDrive\Desktop\Development Softeware Projects\UbuntuMed"
+
+# --- .gitignore ---
+@"
+# ===== Python =====
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# ===== Node =====
+node_modules/
+dist/
+.vite/
+*.local
+
+# ===== Environment =====
+.env
+.env.local
+.env.*.local
+
+# ===== Database =====
+*.db
+*.sqlite3
+
+# ===== Large ML Model Files =====
+ml_training/saved_models/*.h5
+ml_training/saved_models/*.pkl
+ml_training/saved_models/*.joblib
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# ===== Logs =====
+logs/
+*.log
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+"@ | Out-File -FilePath ".gitignore" -Encoding utf8
+
+# --- .env.example ---
+@"
+# ===== Backend =====
+APP_NAME=UbuntuMed
+APP_ENV=development
+DEBUG=True
+SECRET_KEY=change-this-to-a-random-string
+
+# ===== Database =====
+DATABASE_URL=sqlite:///./ubuntumed.db
+# For production:
+# DATABASE_URL=postgresql://user:password@host:5432/ubuntumed
+
+# ===== CORS =====
+FRONTEND_URL=http://localhost:5173
+
+# ===== ML Models =====
+FORECAST_MODEL_PATH=ml_training/saved_models/forecast_model.pkl
+ANOMALY_MODEL_PATH=ml_training/saved_models/anomaly_model.h5
+CHATBOT_MODEL_PATH=ml_training/saved_models/chatbot_nlp.pkl
+"@ | Out-File -FilePath ".env.example" -Encoding utf8
+
