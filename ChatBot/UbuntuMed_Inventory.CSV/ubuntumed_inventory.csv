@@ -1,0 +1,13 @@
+clinic,medicine,quantity,expiry_date
+Clinic A,ARVs,312,2027-08-31
+Clinic A,Paracetamol,850,2027-02-15
+Clinic A,Amoxicillin,120,2026-12-20
+Clinic A,Flu medicine,95,2026-11-30
+Clinic B,ARVs,180,2027-05-10
+Clinic B,Paracetamol,430,2026-12-10
+Clinic B,Amoxicillin,65,2026-11-25
+Clinic B,Flu medicine,210,2027-03-01
+Clinic C,ARVs,75,2027-01-15
+Clinic C,Paracetamol,260,2026-11-05
+Clinic C,Amoxicillin,300,2027-04-20
+Clinic C,Flu medicine,40,2026-10-28

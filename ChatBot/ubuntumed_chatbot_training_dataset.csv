@@ -1,0 +1,251 @@
+text,intent
+How many ARVs are left at Clinic A?,check_stock
+What is the current stock of antibiotics at Clinic B?,check_stock
+Check the available paracetamol at Clinic C.,check_stock
+How many insulin units are in stock at Clinic A?,check_stock
+Do we have enough amoxicillin at Clinic D?,check_stock
+Tell me the stock level of malaria medicine at Clinic B.,check_stock
+How much cough syrup is available at Clinic E?,check_stock
+Check how many flu tablets Clinic A has.,check_stock
+What is the remaining stock of vaccines at Clinic C?,check_stock
+How many units of pain medication are available at Clinic D?,check_stock
+Is there any stock of oral rehydration salts at Clinic B?,check_stock
+Show the available stock of blood pressure medicine at Clinic A.,check_stock
+How many tuberculosis medicines are left at Clinic E?,check_stock
+Check the stock quantity for contraceptives at Clinic C.,check_stock
+How much amoxicillin is left in the pharmacy at Clinic A?,check_stock
+What is the current quantity of ARVs at Clinic D?,check_stock
+Can you check stock for asthma inhalers at Clinic B?,check_stock
+How many malaria tablets are available at Clinic E?,check_stock
+Tell me whether Clinic C has paracetamol in stock.,check_stock
+What quantity of insulin does Clinic D have?,check_stock
+Check the remaining antibiotics at Clinic A.,check_stock
+How many vaccine doses are currently available at Clinic B?,check_stock
+What is the stock count for painkillers at Clinic E?,check_stock
+How much oral rehydration solution is at Clinic C?,check_stock
+Are there any ARVs available at Clinic B right now?,check_stock
+Show me the current stock of flu medicine at Clinic D.,check_stock
+How many blood pressure tablets remain at Clinic E?,check_stock
+Check the inventory for tuberculosis medicine at Clinic A.,check_stock
+What is the available quantity of asthma inhalers at Clinic C?,check_stock
+How many contraceptive units are left at Clinic D?,check_stock
+Can you tell me the stock level of insulin at Clinic B?,check_stock
+How many antibiotics does Clinic E have in storage?,check_stock
+Check the number of paracetamol packs at Clinic A.,check_stock
+What is left of the malaria medicine at Clinic D?,check_stock
+Show stock availability for vaccines at Clinic E.,check_stock
+How many ARV packs are in Clinic C's inventory?,check_stock
+"Is Clinic D running low on amoxicillin, and what is its current quantity?",check_stock
+Give me the current count of cough syrup bottles at Clinic A.,check_stock
+How much flu medication is in stock at Clinic B?,check_stock
+Check how many tuberculosis treatment packs remain at Clinic C.,check_stock
+What is the current stock of oral rehydration salts at Clinic E?,check_stock
+How many asthma inhalers are on hand at Clinic D?,check_stock
+Tell me the remaining quantity of contraceptives at Clinic B.,check_stock
+Can I see the current insulin stock at Clinic E?,check_stock
+How many pain medication packs are available at Clinic C?,check_stock
+Check the inventory count for antibiotics at Clinic D.,check_stock
+How much medicine for high blood pressure is left at Clinic B?,check_stock
+What is the current number of vaccine doses at Clinic A?,check_stock
+Tell me how many malaria treatment packs are in Clinic C.,check_stock
+Can you look up the available ARV stock at Clinic E?,check_stock
+How many ARVs will Clinic A need next month?,forecast_demand
+Forecast antibiotic demand for Clinic B for the next four weeks.,forecast_demand
+How much flu medicine should Clinic C order before winter?,forecast_demand
+Predict the paracetamol demand at Clinic A next month.,forecast_demand
+How many insulin units might Clinic D use next quarter?,forecast_demand
+Estimate malaria medicine needs for Clinic B during the rainy season.,forecast_demand
+What will the vaccine demand be at Clinic E next month?,forecast_demand
+Forecast cough syrup requirements for Clinic C over the next 30 days.,forecast_demand
+How many tuberculosis medicine packs should Clinic A plan for next month?,forecast_demand
+Predict demand for asthma inhalers at Clinic D next quarter.,forecast_demand
+Estimate how many contraceptives Clinic B will need next month.,forecast_demand
+What quantity of oral rehydration salts will Clinic E need during summer?,forecast_demand
+Forecast blood pressure medicine demand at Clinic C for the next month.,forecast_demand
+How much amoxicillin should Clinic D expect to use next month?,forecast_demand
+Predict flu tablet demand across clinics during winter.,forecast_demand
+How many ARV packs should Clinic B prepare for the next 60 days?,forecast_demand
+Estimate paracetamol requirements at Clinic E for the coming month.,forecast_demand
+Forecast insulin usage at Clinic A for the next two weeks.,forecast_demand
+What is the expected demand for malaria tablets at Clinic D next month?,forecast_demand
+Predict vaccine requirements for Clinic B over the next quarter.,forecast_demand
+How much antibiotic stock will Clinic C need for the next 30 days?,forecast_demand
+Estimate demand for cough medicine at Clinic A during winter.,forecast_demand
+How many asthma inhalers are likely to be needed at Clinic E next month?,forecast_demand
+Forecast tuberculosis treatment demand at Clinic D for the next month.,forecast_demand
+What will the demand for contraceptives be at Clinic A next quarter?,forecast_demand
+Predict oral rehydration salt usage at Clinic B during the rainy season.,forecast_demand
+How many blood pressure tablets should Clinic E plan to use next month?,forecast_demand
+Estimate amoxicillin demand at Clinic A for the next four weeks.,forecast_demand
+Forecast ARV demand at Clinic C for the next three months.,forecast_demand
+How much flu medicine will Clinic D likely need in June?,forecast_demand
+Predict paracetamol use at Clinic B during the school holiday period.,forecast_demand
+What medicine quantities should Clinic E plan for next month based on past usage?,forecast_demand
+Estimate vaccine demand at Clinic A for the next 90 days.,forecast_demand
+How many malaria treatment packs will Clinic C need during the rainy season?,forecast_demand
+Forecast insulin demand at Clinic B for the next month.,forecast_demand
+Predict antibiotic consumption at Clinic E over the next six weeks.,forecast_demand
+How much cough syrup should Clinic D keep for the coming month?,forecast_demand
+Estimate the next month's demand for tuberculosis medicine at Clinic B.,forecast_demand
+Forecast asthma medicine requirements at Clinic A for winter.,forecast_demand
+How many contraceptive units will Clinic C need in the next 30 days?,forecast_demand
+Predict oral rehydration solution demand at Clinic D for summer.,forecast_demand
+How much blood pressure medicine will Clinic A need next quarter?,forecast_demand
+Forecast demand for pain medication at Clinic E for the next month.,forecast_demand
+Estimate flu medicine needs at clinics in colder areas this winter.,forecast_demand
+Predict how many ARVs Clinic D will dispense next month.,forecast_demand
+What is the expected demand for antibiotics at Clinic A next week?,forecast_demand
+Forecast malaria medicine demand for Clinic E over the next two months.,forecast_demand
+How much insulin should Clinic C plan for during the next 30 days?,forecast_demand
+Estimate vaccine demand at Clinic D using recent usage data.,forecast_demand
+Can you predict next month's medicine needs for Clinic B?,forecast_demand
+Which medicines at Clinic A expire in the next 30 days?,check_expiry
+Check for ARVs that are close to expiry at Clinic B.,check_expiry
+What antibiotics at Clinic C expire next month?,check_expiry
+Show me all medicine batches expiring this week at Clinic D.,check_expiry
+Are any insulin units at Clinic A nearing expiry?,check_expiry
+Which medicines at Clinic E expire before the end of the year?,check_expiry
+Check the expiry dates of vaccines at Clinic B.,check_expiry
+Do any flu medicines at Clinic C expire within 60 days?,check_expiry
+List the paracetamol batches that expire soon at Clinic D.,check_expiry
+Which malaria medicines at Clinic A have the earliest expiry dates?,check_expiry
+Tell me if any cough syrup at Clinic E will expire next month.,check_expiry
+Find tuberculosis medicine at Clinic B that expires within 90 days.,check_expiry
+Which asthma inhalers at Clinic D are close to expiry?,check_expiry
+Check whether contraceptives at Clinic C expire this quarter.,check_expiry
+Are any antibiotics at Clinic A already expired?,check_expiry
+Show medicine batches expiring in the next two weeks at Clinic E.,check_expiry
+Which blood pressure medicines at Clinic B expire soon?,check_expiry
+Check the expiry dates for oral rehydration salts at Clinic D.,check_expiry
+How many vaccine doses at Clinic A expire this month?,check_expiry
+Which ARV batches should be used first because of expiry dates?,check_expiry
+List all medicines at Clinic C expiring within 45 days.,check_expiry
+Does Clinic D have insulin that expires before next month?,check_expiry
+Find all expired medicine stock at Clinic B.,check_expiry
+Which flu tablets at Clinic E expire before winter ends?,check_expiry
+Tell me what medicine at Clinic A expires in the next 14 days.,check_expiry
+Check if any paracetamol stock at Clinic B expires this quarter.,check_expiry
+Which malaria treatment packs at Clinic C are nearing expiry?,check_expiry
+Show the earliest expiry date for antibiotics at Clinic E.,check_expiry
+Are any tuberculosis medicine packs at Clinic A expiring soon?,check_expiry
+Find contraceptive batches at Clinic D with less than 60 days to expiry.,check_expiry
+Which medicines in Clinic B's inventory expire next week?,check_expiry
+Check for asthma inhalers that expire within 30 days at Clinic E.,check_expiry
+How many ARV packs at Clinic C expire in the next three months?,check_expiry
+List insulin batches at Clinic D sorted by expiry date.,check_expiry
+Which medicines at Clinic A should be prioritised for use due to expiry?,check_expiry
+Are any oral rehydration salts at Clinic C close to their expiry date?,check_expiry
+Check cough syrup expiry at Clinic B.,check_expiry
+What vaccine stock at Clinic E will expire within 60 days?,check_expiry
+Find antibiotics at Clinic D that expire before the next delivery.,check_expiry
+Which blood pressure tablets at Clinic A expire first?,check_expiry
+Tell me the number of expired medicine batches at Clinic C.,check_expiry
+Show all medicines expiring before the end of next month at Clinic B.,check_expiry
+Are any malaria medicines at Clinic E past their expiry date?,check_expiry
+Check expiry dates for pain medication at Clinic D.,check_expiry
+Which medicines at Clinic A have fewer than 90 days remaining before expiry?,check_expiry
+List ARV batches at Clinic E by soonest expiry.,check_expiry
+Does Clinic C have any flu medicine expiring this month?,check_expiry
+Identify contraceptive stock at Clinic B that expires within 30 days.,check_expiry
+Which medicine batches at Clinic D need urgent expiry attention?,check_expiry
+Can you check which medicines are due to expire soon at Clinic A?,check_expiry
+Request a transfer of 100 ARV units from Clinic A to Clinic B.,request_transfer
+Can Clinic A send 50 antibiotic packs to Clinic C?,request_transfer
+Suggest moving 200 paracetamol tablets from Clinic D to Clinic B.,request_transfer
+Request 20 insulin units from Clinic E for Clinic A.,request_transfer
+Can we transfer malaria medicine from Clinic B to Clinic D?,request_transfer
+Clinic C needs more flu tablets; suggest a transfer from Clinic A.,request_transfer
+Move 30 cough syrup bottles from Clinic D to Clinic E if available.,request_transfer
+Can Clinic B send 40 vaccine doses to Clinic A?,request_transfer
+Request 75 tuberculosis medicine packs for Clinic C from Clinic E.,request_transfer
+Suggest transferring asthma inhalers from Clinic A to Clinic D.,request_transfer
+Can we move 100 contraceptive units from Clinic E to Clinic B?,request_transfer
+Request oral rehydration salts from Clinic C for Clinic A.,request_transfer
+Transfer 60 blood pressure medicine packs from Clinic D to Clinic C.,request_transfer
+Clinic E is short on amoxicillin; find a clinic that can supply it.,request_transfer
+Can Clinic A send 25 malaria treatment packs to Clinic B?,request_transfer
+Suggest redistributing ARVs from overstocked Clinic D to Clinic E.,request_transfer
+Request 40 paracetamol packs from Clinic B for Clinic D.,request_transfer
+Can we send insulin from Clinic C to Clinic E?,request_transfer
+Arrange a proposed transfer of 15 asthma inhalers from Clinic B to Clinic A.,request_transfer
+Clinic D needs antibiotics; check whether Clinic E can transfer some.,request_transfer
+Suggest moving vaccine doses nearing expiry from Clinic A to Clinic C if they can be used in time.,request_transfer
+Request 80 flu medicine packs from Clinic E for Clinic B.,request_transfer
+Can Clinic C transfer cough syrup to Clinic D?,request_transfer
+Recommend a transfer of tuberculosis medicine from Clinic B to Clinic E.,request_transfer
+Request 50 oral rehydration salt packs from Clinic A for Clinic D.,request_transfer
+Can Clinic E supply 30 blood pressure medicine packs to Clinic C?,request_transfer
+Suggest sending contraceptives from Clinic D to Clinic A.,request_transfer
+"Transfer 10 insulin pens from Clinic B to Clinic E, if stock allows.",request_transfer
+Clinic A needs malaria medicine; identify a possible supplying clinic.,request_transfer
+Request 100 antibiotic packs from Clinic C for Clinic E.,request_transfer
+Can Clinic D send ARVs to Clinic B to prevent a shortage?,request_transfer
+Suggest a transfer of paracetamol from Clinic E to Clinic A.,request_transfer
+Request vaccine stock from Clinic C for Clinic B.,request_transfer
+Can Clinic A provide 20 asthma inhalers to Clinic E?,request_transfer
+Recommend moving excess amoxicillin from Clinic B to Clinic D.,request_transfer
+Clinic C has a shortage of contraceptives; can Clinic A supply them?,request_transfer
+Request 25 cough syrup bottles from Clinic E for Clinic C.,request_transfer
+Suggest transferring flu medicine from Clinic D to Clinic A before winter demand rises.,request_transfer
+Can Clinic B send 35 tuberculosis medicine packs to Clinic C?,request_transfer
+Request oral rehydration salts from the nearest clinic with surplus stock.,request_transfer
+Can Clinic E transfer 45 pain medication packs to Clinic D?,request_transfer
+Suggest redistributing insulin from Clinic A to a clinic with higher demand.,request_transfer
+Request 60 ARV packs from Clinic C for Clinic D.,request_transfer
+Can Clinic D supply antibiotics to Clinic A this week?,request_transfer
+Recommend a transfer of vaccines from Clinic E to Clinic B if storage requirements can be met.,request_transfer
+Request 20 malaria medicine packs from Clinic A for Clinic E.,request_transfer
+Can Clinic C send extra blood pressure medicine to Clinic B?,request_transfer
+Suggest moving contraceptives with suitable expiry dates from Clinic E to Clinic D.,request_transfer
+Request 40 amoxicillin packs from Clinic A for Clinic C.,request_transfer
+Which clinic can transfer available paracetamol to Clinic B?,request_transfer
+Has ARV usage at Clinic A increased unusually this month?,detect_anomaly
+Detect unusual antibiotic consumption at Clinic B.,detect_anomaly
+Why is paracetamol usage at Clinic C much higher than normal?,detect_anomaly
+Check whether insulin stock changes at Clinic D look unusual.,detect_anomaly
+Has malaria medicine demand at Clinic E suddenly increased?,detect_anomaly
+Find unusual patterns in vaccine usage at Clinic A.,detect_anomaly
+Is the number of flu tablets dispensed at Clinic B outside the normal pattern?,detect_anomaly
+Check for unexpected drops in ARV stock at Clinic C.,detect_anomaly
+Has antibiotic dispensing at Clinic D changed unusually this week?,detect_anomaly
+Identify unusual medicine usage at Clinic E compared with previous months.,detect_anomaly
+Is cough syrup consumption at Clinic A higher than expected?,detect_anomaly
+Detect any unusual stock movements for insulin at Clinic B.,detect_anomaly
+Why did vaccine stock at Clinic C decrease much faster than usual?,detect_anomaly
+Check for unexpected increases in tuberculosis medicine use at Clinic D.,detect_anomaly
+Has contraceptive distribution at Clinic E changed abnormally?,detect_anomaly
+Find unusual paracetamol dispensing patterns at Clinic A.,detect_anomaly
+Is malaria medicine usage at Clinic B different from its normal seasonal pattern?,detect_anomaly
+Detect sudden changes in asthma inhaler demand at Clinic C.,detect_anomaly
+Has oral rehydration salt use at Clinic D risen unexpectedly?,detect_anomaly
+Identify unusual expiry losses at Clinic E.,detect_anomaly
+Check whether blood pressure medicine usage at Clinic A is unusually low.,detect_anomaly
+Is there an unexpected difference between recorded stock and medicine usage at Clinic B?,detect_anomaly
+Find abnormal changes in antibiotic stock at Clinic C.,detect_anomaly
+Has ARV dispensing at Clinic D dropped suddenly?,detect_anomaly
+Detect unusual medicine demand at clinics compared with their historical patterns.,detect_anomaly
+Why is flu medicine use at Clinic E lower than expected for winter?,detect_anomaly
+Check for a sudden spike in insulin requests at Clinic A.,detect_anomaly
+Are there unusual differences in vaccine use between Clinic B and Clinic C?,detect_anomaly
+Identify unexpected stock losses for malaria medicine at Clinic D.,detect_anomaly
+Has tuberculosis medicine demand at Clinic E changed more than usual?,detect_anomaly
+Detect unusual patterns in contraceptive stock levels at Clinic A.,detect_anomaly
+Is paracetamol usage at Clinic B unusually low compared with last month?,detect_anomaly
+Find medicine categories with sudden increases in demand at Clinic C.,detect_anomaly
+Check whether Clinic D's cough syrup dispensing is outside its normal range.,detect_anomaly
+Has asthma medicine stock at Clinic E dropped unexpectedly?,detect_anomaly
+Identify unusual weekly changes in ARV inventory at Clinic A.,detect_anomaly
+Is the expiry waste for antibiotics at Clinic B higher than normal?,detect_anomaly
+Detect unexpected changes in oral rehydration salt demand at Clinic C.,detect_anomaly
+Has blood pressure medicine use at Clinic D suddenly increased?,detect_anomaly
+Check for unusual differences between forecast and actual demand at Clinic E.,detect_anomaly
+Identify abnormal stock movements for vaccines at Clinic A.,detect_anomaly
+Is malaria medicine consumption at Clinic C unusually high for this time of year?,detect_anomaly
+Find unexpected drops in contraceptive stock at Clinic D.,detect_anomaly
+Has insulin wastage at Clinic E increased unusually?,detect_anomaly
+Detect a sudden rise in antibiotic demand at Clinic A.,detect_anomaly
+Is tuberculosis medicine usage at Clinic B inconsistent with its recent history?,detect_anomaly
+Find clinics with unusual medicine consumption patterns this month.,detect_anomaly
+Check whether ARV stock records at Clinic E contain an unexpected change.,detect_anomaly
+Has flu medicine demand at Clinic D risen faster than the forecast?,detect_anomaly
+Tell me if any medicine usage pattern looks abnormal at Clinic C.,detect_anomaly
