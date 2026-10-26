@@ -1,10 +1,11 @@
+# frontend/app.py
 from flask import Flask, render_template, request, redirect, url_for
 import requests
-from datetime import datetime
 
 app = Flask(__name__)
 
 API_URL = 'https://ubuntumed-api.onrender.com'
+
 
 @app.route('/')
 def dashboard():
@@ -12,11 +13,14 @@ def dashboard():
     recommendations = []
     stock_labels = []
     stock_data_chart = []
-    expiry_chart_data = [15, 5, 2]  # Mock: [Valid, Expiring Soon, Expired]
+    expiry_chart_data = [15, 5, 2]  # mock: [Valid, Expiring Soon, Expired]
+    forecast = None
+    anomalies = None
 
     try:
-        # timeout=60 allows the free-tier backend to wake up (takes ~50s)
+        # 1. Fetch stock — this is the call that wakes up the sleeping backend
         response = requests.get(f'{API_URL}/stock', timeout=60)
+
         if response.status_code == 200:
             data = response.json().get('stock_data', [])
 
@@ -29,6 +33,7 @@ def dashboard():
 
                 records.append({
                     'id': i + 1,
+                    'clinic': item['clinic'],
                     'name': item['medicine'],
                     'batch': f"BATCH-{100+i}",
                     'quantity': item['quantity'],
@@ -49,6 +54,28 @@ def dashboard():
                     stock_labels.append(f"{item['clinic']} - {item['medicine']}")
                     stock_data_chart.append(item['quantity'])
 
+            # 2. Fetch AI forecast for the first available clinic/medicine
+            if records:
+                first = records[0]
+                try:
+                    fc = requests.post(
+                        f'{API_URL}/forecast',
+                        json={"clinic": first['clinic'], "medicine": first['name']},
+                        timeout=30
+                    )
+                    if fc.status_code == 200:
+                        forecast = fc.json()
+                except Exception as e:
+                    print(f"Forecast fetch failed: {e}")
+
+            # 3. Fetch anomaly detection results
+            try:
+                an = requests.get(f'{API_URL}/anomaly', timeout=30)
+                if an.status_code == 200:
+                    anomalies = an.json()
+            except Exception as e:
+                print(f"Anomaly fetch failed: {e}")
+
     except Exception as e:
         print(f"Error connecting to FastAPI: {e}")
 
@@ -57,11 +84,15 @@ def dashboard():
                            recommendations=recommendations,
                            stock_labels=stock_labels,
                            stock_data=stock_data_chart,
-                           expiry_chart_data=expiry_chart_data)
+                           expiry_chart_data=expiry_chart_data,
+                           forecast=forecast,
+                           anomalies=anomalies)
+
 
 @app.route('/add', methods=['POST'])
 def add_stock():
     return redirect(url_for('dashboard'))
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

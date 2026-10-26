@@ -127,6 +127,63 @@
         </div>
       </div>
 
+      <!-- ========================================== -->
+      <!-- AI INSIGHTS CARD                            -->
+      <!-- ========================================== -->
+      <div class="card p-4 mb-4">
+        <h5 class="text-primary mb-3">🤖 AI Insights</h5>
+        <div class="row g-3">
+          <!-- Forecast Model -->
+          <div class="col-md-6">
+            <div class="card p-3 h-100 border-start border-primary border-4">
+              <h6 class="text-secondary mb-2">
+                📈 Demand Forecast (Random Forest Model)
+              </h6>
+              {% if forecast and forecast.predicted_demand_30_days %}
+              <p class="mb-1">
+                <strong>{{ forecast.clinic }} — {{ forecast.medicine }}</strong>
+              </p>
+              <p class="text-primary fs-3 mb-0 fw-bold">
+                {{ forecast.predicted_demand_30_days }} units
+              </p>
+              <small class="text-muted">
+                Predicted demand over the next 30 days
+                {% if forecast.source %}· source: {{ forecast.source }}{% endif %}
+              </small>
+              {% else %}
+              <p class="text-muted mb-0">
+                Forecast unavailable. Waiting for backend.
+              </p>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Anomaly Detection -->
+          <div class="col-md-6">
+            <div class="card p-3 h-100 border-start border-warning border-4">
+              <h6 class="text-secondary mb-2">
+                ⚠️ Anomaly Detection (Isolation Forest Model)
+              </h6>
+              {% if anomalies and anomalies.anomalies_detected and anomalies.details %}
+              {% for d in anomalies.details %}
+              <div class="alert alert-warning py-2 px-3 mb-2">
+                <strong>{{ d.clinic }}</strong> — {{ d.medicine }}<br />
+                <small>{{ d.issue }}</small>
+              </div>
+              {% endfor %}
+              {% else %}
+              <p class="text-success mb-0">
+                ✅ No unusual consumption patterns detected.
+              </p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ========================================== -->
+      <!-- END AI INSIGHTS CARD                        -->
+      <!-- ========================================== -->
+
       <!-- Reorder Procurement Recommendation Table -->
       <div class="card p-4 mb-4">
         <h5 class="text-danger mb-3">
