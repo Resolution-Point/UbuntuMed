@@ -4,8 +4,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-
-API_URL = 'https://ubuntumed-api.onrender.com' 
+API_URL = 'https://ubuntumed-api.onrender.com'
 
 @app.route('/')
 def dashboard():
@@ -13,16 +12,15 @@ def dashboard():
     recommendations = []
     stock_labels = []
     stock_data_chart = []
-    expiry_chart_data = [15, 5, 2] # Mock data: [Valid, Expiring Soon, Expired]
+    expiry_chart_data = [15, 5, 2]  # Mock: [Valid, Expiring Soon, Expired]
 
     try:
-        # Fetch data from your FastAPI backend
-        response = requests.get(f'{API_URL}/stock')
+        # timeout=60 allows the free-tier backend to wake up (takes ~50s)
+        response = requests.get(f'{API_URL}/stock', timeout=60)
         if response.status_code == 200:
             data = response.json().get('stock_data', [])
 
             for i, item in enumerate(data):
-                # 1. Translate FastAPI data into what the HTML table expects
                 status = "VALID"
                 if item['status'] == 'Stockout':
                     status = "EXPIRED"
@@ -39,7 +37,6 @@ def dashboard():
                     'status': status
                 })
 
-                # 2. Create Recommendations if stock is low
                 if item['status'] in ['Low', 'Stockout']:
                     recommendations.append({
                         'name': item['medicine'],
@@ -48,8 +45,7 @@ def dashboard():
                         'recommended_buy': 500
                     })
 
-                # 3. Prepare data for the Bar Chart
-                if len(stock_labels) < 8: # Limit to 8 bars for the chart
+                if len(stock_labels) < 8:
                     stock_labels.append(f"{item['clinic']} - {item['medicine']}")
                     stock_data_chart.append(item['quantity'])
 
@@ -65,8 +61,6 @@ def dashboard():
 
 @app.route('/add', methods=['POST'])
 def add_stock():
-    # This handles the form submission from the HTML.
-    # For the demo, we just redirect back to the dashboard.
     return redirect(url_for('dashboard'))
 
 if __name__ == '__main__':
