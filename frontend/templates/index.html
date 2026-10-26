@@ -1,168 +1,333 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hospital Inventory & Analytics Dashboard</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Custom CSS -->
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <link
+      href="{{ url_for('static', filename='css/style.css') }}"
+      rel="stylesheet"
+    />
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="p-4">
+  </head>
+  <body class="p-4">
+    <div class="container-fluid">
+      <h2 class="mb-4 text-primary fw-bold">
+        🏥 Hospital Medical Inventory & Reorder Dashboard
+      </h2>
 
-<div class="container-fluid">
-    <h2 class="mb-4 text-primary fw-bold">🏥 Hospital Medical Inventory & Reorder Dashboard</h2>
-
-    <!-- Form & Overview Section -->
-    <div class="row g-4 mb-4">
+      <!-- Form & Overview Section -->
+      <div class="row g-4 mb-4">
         <!-- Entry Form -->
         <div class="col-lg-4">
-            <div class="card p-4 h-100">
-                <h5 class="card-title text-secondary mb-3">Receive New Stock</h5>
-                <form action="/add" method="POST">
-                    <div class="mb-2">
-                        <label class="form-label">Medication Name</label>
-                        <input type="text" name="med_name" class="form-control" placeholder="e.g. Paracetamol 500mg" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Batch Number</label>
-                        <input type="text" name="batch_no" class="form-control" placeholder="e.g. BATCH-2026-X" required>
-                    </div>
-                    <div class="row g-2 mb-2">
-                        <div class="col-6">
-                            <label class="form-label">Quantity Received</label>
-                            <input type="number" name="quantity" class="form-control" min="1" required>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Unit Price (R)</label>
-                            <input type="number" step="0.01" name="unit_price" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Expiry Date</label>
-                            <input type="date" name="expiry_date" class="form-control" required>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Min Threshold</label>
-                            <input type="number" name="min_threshold" class="form-control" value="50" required>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Log Received Stock</button>
-                </form>
-            </div>
+          <div class="card p-4 h-100">
+            <h5 class="card-title text-secondary mb-3">Receive New Stock</h5>
+            <form action="/add" method="POST">
+              <div class="mb-2">
+                <label class="form-label">Medication Name</label>
+                <input
+                  type="text"
+                  name="med_name"
+                  class="form-control"
+                  placeholder="e.g. Paracetamol 500mg"
+                  required
+                />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Batch Number</label>
+                <input
+                  type="text"
+                  name="batch_no"
+                  class="form-control"
+                  placeholder="e.g. BATCH-2026-X"
+                  required
+                />
+              </div>
+              <div class="row g-2 mb-2">
+                <div class="col-6">
+                  <label class="form-label">Quantity Received</label>
+                  <input
+                    type="number"
+                    name="quantity"
+                    class="form-control"
+                    min="1"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Unit Price (R)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="unit_price"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label class="form-label">Expiry Date</label>
+                  <input
+                    type="date"
+                    name="expiry_date"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Min Threshold</label>
+                  <input
+                    type="number"
+                    name="min_threshold"
+                    class="form-control"
+                    value="50"
+                    required
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Log Received Stock
+              </button>
+            </form>
+          </div>
         </div>
 
         <!-- Visual Analytics Charts -->
-        <div class="col-lg-8" 
-             id="chartDataContainer"
-             data-expiry='{{ expiry_chart_data | tojson }}'
-             data-labels='{{ stock_labels | tojson }}'
-             data-stock='{{ stock_data | tojson }}'>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="card p-3 h-100">
-                        <h6 class="text-center text-secondary mb-3">Expiry Status Breakdown</h6>
-                        <div class="chart-container">
-                            <canvas id="expiryChart"></canvas>
-                        </div>
-                    </div>
+        <div
+          class="col-lg-8"
+          id="chartDataContainer"
+          data-expiry="{{ expiry_chart_data | tojson }}"
+          data-labels="{{ stock_labels | tojson }}"
+          data-stock="{{ stock_data | tojson }}"
+        >
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card p-3 h-100">
+                <h6 class="text-center text-secondary mb-3">
+                  Expiry Status Breakdown
+                </h6>
+                <div class="chart-container">
+                  <canvas id="expiryChart"></canvas>
                 </div>
-                <div class="col-md-6">
-                    <div class="card p-3 h-100">
-                        <h6 class="text-center text-secondary mb-3">Current Stock in Storage (Valid)</h6>
-                        <div class="chart-container">
-                            <canvas id="stockChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+            <div class="col-md-6">
+              <div class="card p-3 h-100">
+                <h6 class="text-center text-secondary mb-3">
+                  Current Stock in Storage (Valid)
+                </h6>
+                <div class="chart-container">
+                  <canvas id="stockChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Reorder Procurement Recommendation Table -->
-    <div class="card p-4 mb-4">
-        <h5 class="text-danger mb-3">🛒 Procurement Trend: Recommended Purchases</h5>
+      <!-- Reorder Procurement Recommendation Table -->
+      <div class="card p-4 mb-4">
+        <h5 class="text-danger mb-3">
+          🛒 Procurement Trend: Recommended Purchases
+        </h5>
         <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Medication Name</th>
-                        <th>Active Stock Level</th>
-                        <th>Minimum Threshold</th>
-                        <th>Recommended Buy Qty</th>
-                        <th>Action Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for rec in recommendations %}
-                    <tr>
-                        <td><strong>{{ rec.name }}</strong></td>
-                        <td>{{ rec.current_stock }}</td>
-                        <td>{{ rec.threshold }}</td>
-                        <td><span class="badge bg-danger fs-6">+{{ rec.recommended_buy }} units</span></td>
-                        <td><span class="text-danger fw-bold">Stock Low - Reorder Urgently</span></td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="5" class="text-success text-center">All active medication levels are currently healthy and above threshold.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Medication Name</th>
+                <th>Active Stock Level</th>
+                <th>Minimum Threshold</th>
+                <th>Recommended Buy Qty</th>
+                <th>Action Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rec in recommendations %}
+              <tr>
+                <td><strong>{{ rec.name }}</strong></td>
+                <td>{{ rec.current_stock }}</td>
+                <td>{{ rec.threshold }}</td>
+                <td>
+                  <span class="badge bg-danger fs-6"
+                    >+{{ rec.recommended_buy }} units</span
+                  >
+                </td>
+                <td>
+                  <span class="text-danger fw-bold"
+                    >Stock Low - Reorder Urgently</span
+                  >
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="5" class="text-success text-center">
+                  All active medication levels are currently healthy and above
+                  threshold.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
-    </div>
+      </div>
 
-    <!-- Full Storage Inventory Table -->
-    <div class="card p-4">
-        <h5 class="text-secondary mb-3">📦 Received Stock Inventory Register</h5>
+      <!-- Full Storage Inventory Table -->
+      <div class="card p-4">
+        <h5 class="text-secondary mb-3">
+          📦 Received Stock Inventory Register
+        </h5>
         <div class="table-responsive">
-            <table class="table table-striped table-bordered align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Medication</th>
-                        <th>Batch No</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Expiry Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in records %}
-                    <tr>
-                        <td>{{ item.id }}</td>
-                        <td><strong>{{ item.name }}</strong></td>
-                        <td>{{ item.batch }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>R {{ "%.2f"|format(item.price) }}</td>
-                        <td>{{ item.expiry_date }}</td>
-                        <td>
-                            {% if item.status == 'EXPIRED' %}
-                                <span class="badge badge-expired px-3 py-2">EXPIRED</span>
-                            {% elif item.status == 'EXPIRING SOON' %}
-                                <span class="badge badge-warning px-3 py-2">EXPIRING SOON</span>
-                            {% else %}
-                                <span class="badge badge-valid px-3 py-2">VALID</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="7" class="text-center">No inventory records available. Use the form above to add stock.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+          <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Medication</th>
+                <th>Batch No</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Expiry Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in records %}
+              <tr>
+                <td>{{ item.id }}</td>
+                <td><strong>{{ item.name }}</strong></td>
+                <td>{{ item.batch }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>R {{ "%.2f"|format(item.price) }}</td>
+                <td>{{ item.expiry_date }}</td>
+                <td>
+                  {% if item.status == 'EXPIRED' %}
+                  <span class="badge badge-expired px-3 py-2">EXPIRED</span>
+                  {% elif item.status == 'EXPIRING SOON' %}
+                  <span class="badge badge-warning px-3 py-2"
+                    >EXPIRING SOON</span
+                  >
+                  {% else %}
+                  <span class="badge badge-valid px-3 py-2">VALID</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="7" class="text-center">
+                  No inventory records available. Use the form above to add
+                  stock.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- Custom Application JS -->
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
+    <!-- ========================================== -->
+    <!-- CHATBOT WIDGET                             -->
+    <!-- ========================================== -->
+    <div id="chatbot-widget">
+      <div class="chatbot-header">
+        <span>💬 UbuntuMed Assistant</span>
+      </div>
+
+      <div id="chat-messages" class="chat-messages">
+        <div class="message-bot">
+          Hello! I am your UbuntuMed assistant. How can I help you today?
+        </div>
+      </div>
+
+      <div class="quick-replies">
+        <button
+          class="quick-reply-btn"
+          onclick="sendQuickReply('How many ARVs are left at Clinic A?')"
+        >
+          Check Stock
+        </button>
+        <button
+          class="quick-reply-btn"
+          onclick="sendQuickReply('What is expiring soon at Clinic A?')"
+        >
+          Check Expiry
+        </button>
+        <button
+          class="quick-reply-btn"
+          onclick="sendQuickReply('What is the forecast for TB Tablets?')"
+        >
+          Forecast
+        </button>
+      </div>
+
+      <div class="chat-input-area">
+        <input
+          type="text"
+          id="chat-input"
+          class="chat-input"
+          placeholder="Or type here..."
+        />
+        <button onclick="sendMessage()" class="chat-send-btn">Send</button>
+      </div>
+    </div>
+
+    <!-- Custom Application JS (Charts) -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- Chatbot JS -->
+    <script>
+      function sendQuickReply(text) {
+        document.getElementById("chat-input").value = text;
+        sendMessage();
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("chat-input");
+        const text = input.value.trim();
+        if (!text) return;
+
+        const messages = document.getElementById("chat-messages");
+
+        // Add user message
+        messages.innerHTML += `
+            <div class="message-user-wrapper">
+                <span class="message-user">${text}</span>
+            </div>`;
+        input.value = "";
+        messages.scrollTop = messages.scrollHeight;
+
+        // Send to backend
+        try {
+          const response = await fetch("http://127.0.0.1:8000/chatbot", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: text }),
+          });
+          const data = await response.json();
+
+          messages.innerHTML += `
+                <div class="message-bot-wrapper">
+                    <span class="message-bot-response">${data.bot_reply}</span>
+                </div>`;
+        } catch (error) {
+          messages.innerHTML += `<div class="message-error">Error connecting to AI.</div>`;
+        }
+
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      document
+        .getElementById("chat-input")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") sendMessage();
+        });
+    </script>
+  </body>
 </html>
