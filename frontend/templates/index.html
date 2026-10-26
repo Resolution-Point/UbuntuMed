@@ -101,13 +101,7 @@
         </div>
 
         <!-- Visual Analytics Charts -->
-        <div
-          class="col-lg-8"
-          id="chartDataContainer"
-          data-expiry="{{ expiry_chart_data | tojson }}"
-          data-labels="{{ stock_labels | tojson }}"
-          data-stock="{{ stock_data | tojson }}"
-        >
+        <div class="col-lg-8">
           <div class="row g-3">
             <div class="col-md-6">
               <div class="card p-3 h-100">
@@ -278,6 +272,17 @@
       </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- CHART DATA (Safely embedded as JSON)       -->
+    <!-- ========================================== -->
+    <script id="chart-data" type="application/json">
+      {
+        "expiry": {{ expiry_chart_data | tojson }},
+        "labels": {{ stock_labels | tojson }},
+        "stock":  {{ stock_data | tojson }}
+      }
+    </script>
+
     <!-- Custom Application JS (Charts) -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
@@ -297,9 +302,9 @@
 
         // Add user message
         messages.innerHTML += `
-        <div class="message-user-wrapper">
-            <span class="message-user">${text}</span>
-        </div>`;
+            <div class="message-user-wrapper">
+                <span class="message-user">${text}</span>
+            </div>`;
         input.value = "";
         messages.scrollTop = messages.scrollHeight;
 
@@ -316,9 +321,9 @@
           const data = await response.json();
 
           messages.innerHTML += `
-            <div class="message-bot-wrapper">
-                <span class="message-bot-response">${data.bot_reply}</span>
-            </div>`;
+                <div class="message-bot-wrapper">
+                    <span class="message-bot-response">${data.bot_reply}</span>
+                </div>`;
         } catch (error) {
           messages.innerHTML += `<div class="message-error">Error connecting to AI.</div>`;
         }
