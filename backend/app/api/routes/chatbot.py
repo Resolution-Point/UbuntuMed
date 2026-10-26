@@ -1,53 +1,63 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 from app.schemas.requests import ChatRequest
-from app.services.data_service import get_data
+from app.core.database import get_db
+from app.models.medicine import MedicineRecord
 from app.ml.model_loader import chatbot_model
 from datetime import date, timedelta
-import pandas as pd
+from sqlalchemy import func
 
 router = APIRouter()
 
 @router.post("/chatbot")
-def chat(req: ChatRequest):
-    df = get_data()
-    if df is None: return {"bot_reply": "Database not connected."}
-
+def chat(req: ChatRequest, db: Session = Depends(get_db)):
     question_lower = req.text.lower()
     
-    # Predict Intent
     intent = "unknown"
     if chatbot_model:
         try: intent = chatbot_model.predict([req.text])[0]
         except Exception: pass
 
-    # Find Clinic & Medicine
-    clinics = sorted(df["clinic"].dropna().unique(), key=len, reverse=True)
+    # Get unique clinics and meds from DB
+    clinics = [c[0] for c in db.query(MedicineRecord.clinic).distinct().all()]
+    medicines = [m[0] for m in db.query(MedicineRecord.medicine).distinct().all()]
+    
     clinic = next((c for c in clinics if c.lower() in question_lower), None)
-    medicines = sorted(df["medicine"].dropna().unique(), key=len, reverse=True)
     medicine = next((m for m in medicines if m.lower() in question_lower), None)
 
-    reply = "I am a specialized assistant. I can only help you with clinic stock, medicine expiry, and demand forecasts."
+    reply = "I am a specialized assistant. I can help with stock, expiry, and forecasts."
 
     if intent == "check_stock":
         if not clinic or not medicine:
-            reply = "Please specify a clinic (e.g., Clinic A) and a medicine (e.g., ARVs)."
+            reply = "Please specify a clinic and a medicine."
         else:
-            result = df[(df["clinic"] == clinic) & (df["medicine"].str.lower() == medicine.lower())]
-            if not result.empty:
-                quantity = result["quantity_used"].sum() 
-                reply = f"{clinic} has {quantity} units of {medicine} available."
+            result = db.query(func.sum(MedicineRecord.quantity_used)).filter(
+                MedicineRecord.clinic == clinic,
+                MedicineRecord.medicine == medicine
+            ).scalar()
+            
+            if result:
+                reply = f"{clinic} has historically used {result} units of {medicine}."
+            else:
+                reply = "No matching stock record found."
 
     elif intent == "check_expiry":
-        records = df.copy()
-        records["expiry_date"] = pd.to_datetime(records["expiry_date"], errors="coerce").dt.date
-        if clinic: records = records[records["clinic"] == clinic]
-        
         today = date.today()
-        expiring = records[records["expiry_date"].notna() & (records["expiry_date"] >= today) & (records["expiry_date"] <= today + timedelta(days=30))]
+        expiry_limit = today + timedelta(days=30)
         
-        if expiring.empty: reply = "No medicines are expiring within 30 days."
+        query = db.query(MedicineRecord).filter(
+            MedicineRecord.expiry_date >= today,
+            MedicineRecord.expiry_date <= expiry_limit
+        )
+        if clinic:
+            query = query.filter(MedicineRecord.clinic == clinic)
+            
+        expiring = query.all()
+        
+        if not expiring: 
+            reply = "No medicines are expiring within 30 days."
         else:
-            items = [f"{row['medicine']} ({row['quantity_used']} units) at {row['clinic']}" for _, row in expiring.iterrows()]
-            reply = "Expiring soon: " + ", ".join(items)
+            items = [f"{row.medicine} ({row.stock_on_hand} units) at {row.clinic}" for row in expiring]
+            reply = "Expiring soon: " + ", ".join(set(items))
 
     return {"user_message": req.text, "detected_intent": intent, "bot_reply": reply}

@@ -1,6 +1,13 @@
 ﻿from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import health, stock, forecast, chatbot
+from app.core.database import engine, Base
+
+# Imports models so SQLAlchemy knows what tables to create
+from app.models import medicine
+
+# Creates the database tables if they don't exist
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="UbuntuMed API", version="1.0.0")
 
