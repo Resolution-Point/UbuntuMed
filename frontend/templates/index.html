@@ -297,25 +297,28 @@
 
         // Add user message
         messages.innerHTML += `
-            <div class="message-user-wrapper">
-                <span class="message-user">${text}</span>
-            </div>`;
+        <div class="message-user-wrapper">
+            <span class="message-user">${text}</span>
+        </div>`;
         input.value = "";
         messages.scrollTop = messages.scrollHeight;
 
         // Send to backend
         try {
-          const response = await fetch("http://127.0.0.1:8000/chatbot", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: text }),
-          });
+          const response = await fetch(
+            "https://ubuntumed-api.onrender.com/chatbot",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: text }),
+            },
+          );
           const data = await response.json();
 
           messages.innerHTML += `
-                <div class="message-bot-wrapper">
-                    <span class="message-bot-response">${data.bot_reply}</span>
-                </div>`;
+            <div class="message-bot-wrapper">
+                <span class="message-bot-response">${data.bot_reply}</span>
+            </div>`;
         } catch (error) {
           messages.innerHTML += `<div class="message-error">Error connecting to AI.</div>`;
         }
