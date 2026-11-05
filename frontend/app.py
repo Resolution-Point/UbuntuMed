@@ -16,6 +16,7 @@ def dashboard():
     expiry_chart_data = [15, 5, 2]  # mock: [Valid, Expiring Soon, Expired]
     forecast = None
     anomalies = None
+    redistribution = None
 
     try:
         # 1. Fetch stock — this is the call that wakes up the sleeping backend
@@ -79,6 +80,13 @@ def dashboard():
     except Exception as e:
         print(f"Error connecting to FastAPI: {e}")
 
+    try:
+        rd = requests.get(f'{API_URL}/redistribute', timeout=30)
+        rd.raise_for_status()
+        redistribution = rd.json()
+    except (requests.RequestException, ValueError) as e:
+        print(f"Redistribution fetch failed: {e}")
+
     return render_template('index.html',
                            records=records,
                            recommendations=recommendations,
@@ -86,7 +94,8 @@ def dashboard():
                            stock_data=stock_data_chart,
                            expiry_chart_data=expiry_chart_data,
                            forecast=forecast,
-                           anomalies=anomalies)
+                           anomalies=anomalies,
+                           redistribution=redistribution)
 
 
 @app.route('/add', methods=['POST'])

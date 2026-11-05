@@ -182,6 +182,53 @@
         </div>
       </div>
 
+      <!-- Redistribution Recommendations -->
+      <div class="card p-4 mb-4">
+        <h5 class="text-success mb-3">AI Redistribution Suggestions</h5>
+        <p class="text-muted">
+          The AI has identified stock that can be moved between clinics to
+          prevent stockouts and expiry waste.
+        </p>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Medicine</th>
+                <th>From (Source)</th>
+                <th>To (Needy Clinic)</th>
+                <th>Suggested Qty</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if redistribution and redistribution.suggestions %}
+              {% for sug in redistribution.suggestions %}
+              <tr>
+                <td><strong>{{ sug.medicine }}</strong></td>
+                <td><span class="badge bg-success">{{ sug.from_clinic }}</span></td>
+                <td><span class="badge bg-danger">{{ sug.to_clinic }}</span></td>
+                <td><strong>{{ sug.transfer_quantity }} units</strong></td>
+                <td><small class="text-muted">{{ sug.reason }}</small></td>
+              </tr>
+              {% endfor %}
+              {% elif redistribution %}
+              <tr>
+                <td colspan="5" class="text-center text-muted">
+                  No redistribution needed at this time. All clinics are balanced.
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="5" class="text-center text-muted">
+                  Redistribution suggestions are unavailable right now.
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Reorder Procurement Recommendation Table -->
       <div class="card p-4 mb-4">
         <h5 class="text-danger mb-3">

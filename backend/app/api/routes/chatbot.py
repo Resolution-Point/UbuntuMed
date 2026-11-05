@@ -106,7 +106,11 @@ def chat(req: ChatRequest, db: Session = Depends(get_db)):
                 reply = "No historical data for that clinic and medicine."
 
     elif intent == "request_transfer":
-        reply = "Transfer suggestions are not fully implemented in this prototype."
+        reply = (
+            "I have analyzed the stock levels. Please check the "
+            "'AI Redistribution Suggestions' table on the dashboard to see "
+            "recommended transfers between clinics."
+        )
 
     elif intent == "detect_anomaly":
         reply = "Open the AI Insights panel on the dashboard to see detected anomalies."

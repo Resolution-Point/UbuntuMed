@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import health, stock, forecast, chatbot, anomaly
+from app.api.routes import health, stock, forecast, chatbot, anomaly, redistribute
 from app.core.database import engine, Base
 from app.models import medicine  # noqa: F401 — registers models
 
@@ -29,4 +29,5 @@ app.include_router(health.router, tags=["System"])
 app.include_router(stock.router, tags=["Inventory"])
 app.include_router(forecast.router, tags=["AI Predictions"])
 app.include_router(anomaly.router, tags=["AI Predictions"])
+app.include_router(redistribute.router, tags=["AI Predictions"])
 app.include_router(chatbot.router, tags=["AI Chatbot"])
