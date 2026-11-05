@@ -1,272 +1,144 @@
 # UbuntuMed
 
-**Smart medicine stock help for public clinics**
+**AI-Powered Medicine Supply & Expiry Prediction for South African Public Clinics**
 
 > _"Ubuntu" — I am because we are. Better medicine availability for all._
 
----
+[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com/)
+[![Flask](https://img.shields.io/badge/Flask-3.0-000000.svg)](https://flask.palletsprojects.com/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.17-FF6F00.svg)](https://tensorflow.org/)
 
-## What is UbuntuMed?
+## Overview
 
-UbuntuMed is an AI-powered tool that helps public clinics and private pharmacies:
+UbuntuMed is an intelligent, predictive layer designed to sit on top of existing health infrastructure (like SVS and RxSolution). It helps public clinics and private pharmacies:
 
-- **Predict** how much medicine each facility will need.
-- **Warn** when stock is about to run out or expire.
-- **Recommend** moving extra medicine between facilities before it is wasted.
-- **Answer** simple questions in plain language through a chatbot.
+- **Forecast** medicine demand using Time-Series Machine Learning.
+- **Warn** staff about impending stockouts and expiry risks.
+- **Recommend** optimal redistribution of stock between nearby facilities.
+- **Answer** natural-language questions via an NLP Chatbot.
 
-We are **not** replacing existing systems like SVS or RxSolution.
-We are adding a smart, predictive layer on top of them.
+## The Problem
 
----
+South Africa's public health system faces chronic medicine shortages and wastage. According to Mabizela et al. (2023) in KwaZulu-Natal:
 
-## Why This Matters
+- **85.6%** of medicines were affected by stockouts.
+- **50.6%** of clinics experienced overstocking.
+- **15.2%** of medicines were wasted due to expiry.
 
-| Problem                                                                              | Evidence                              |
-| ------------------------------------------------------------------------------------ | ------------------------------------- |
-| Stockouts affected 85.6% of medicines                                                | Mabizela et al. (2023), KwaZulu-Natal |
-| Overstocking affected 50.6% of medicines                                             | Same study                            |
-| Expiry-related wastage affected 15.2%                                                | Same study                            |
-| Overstocking and short-dated stock explained 68% of real redistribution transactions | Same study                            |
-| AI-based platforms in Uganda reduced stockouts and overstocking by over 40%          | BMJ rapid response (2025)             |
+## Machine Learning Models
 
----
+UbuntuMed utilizes a hybrid AI approach:
 
-## Architecture
+1. **Demand Forecasting (Random Forest Regressor):** Uses historical lag features and 4-week rolling averages to predict future demand.
+   - _Performance:_ **MAPE of 11.01%** (Highly accurate).
+2. **Anomaly Detection (Isolation Forest & Deep Learning):** A TensorFlow Autoencoder detects unusual consumption spikes (e.g., stockout panic or theft) by analyzing reconstruction error.
+3. **NLP Chatbot (TF-IDF + Logistic Regression):** Classifies user intents (e.g., "check stock", "check expiry") achieving **96% accuracy**.
 
-[React Frontend]
-|
-| REST API
-v
-[FastAPI Backend]
-| | |
-v v v
-[Postgres] [ML Models] [Chatbot NLP]
+## Visual Results
 
-- **Backend:** FastAPI (Python)
-- **Frontend:** React + Vite + Tailwind CSS
-- **ML Models:** Prophet/ARIMA, TensorFlow autoencoder, spaCy intent classifier
-- **Database:** SQLite for development, PostgreSQL for production
-- **Deployment:** Render (backend), Vercel (frontend)
+### 1. Forecasting Accuracy
 
----
+_The Random Forest predictions (blue) closely track the actual demand (black)._
+![Forecast Plot](docs/images/1_forecast_actual_vs_predicted.png)
+
+### 2. Anomaly Detection
+
+_The Deep Learning Autoencoder successfully identifies anomalous spikes in demand._
+![Anomaly Plot](docs/images/2_anomaly_detection.png)
+
+### 3. AI Feature Importance
+
+_Our model correctly learns that `lag_1` (last week's demand) and `rolling_mean_4` are the strongest predictors of future demand._
+![Feature Importance](docs/images/3_feature_importance.png)
+
+## Data Strategy
+
+We utilized a hybrid data strategy to ensure our AI learns realistic South African conditions without breaching patient privacy:
+
+- **District Health Barometer (DHB):** Real district-level medicine availability indicators.
+- **Zenodo PLMIF Dataset:** Macroeconomic supply-chain risk scores (e.g., port delays).
+- **Synthetic South African Dataset:** We generated 3 years of operational dispensing data, calibrated using the real stockout statistics from the KZN study and DHB availability rates, fully POPIA compliant.
+
+## System Architecture
+
+The application uses a modern 3-tier architecture:
+
+- **Frontend:** Flask (HTML/CSS/JS) with Chart.js and Bootstrap.
+- **Backend:** FastAPI (Python), serving 5 REST API endpoints (`/stock`, `/forecast`, `/anomaly`, `/chatbot`, `/health`).
+- **Database:** PostgreSQL hosted on Supabase.
+- **Deployment:** Render (Backend & Frontend).
 
 ## Repository Structure
 
+```text
 ubuntumed/
-├── backend/ # FastAPI application
-│ ├── app/
-│ │ ├── api/ # API routes
-│ │ ├── core/ # Config, database
-│ │ ├── models/ # SQLAlchemy models
-│ │ ├── schemas/ # Pydantic schemas
-│ │ ├── services/ # Business logic
-│ │ ├── ml/ # ML model loading and inference
-│ │ └── utils/ # Helpers
-│ └── tests/ # Backend tests
-├── frontend/ # React application
-│ └── src/
-│ ├── components/
-│ ├── pages/
-│ ├── services/ # API calls
-│ ├── hooks/
-│ └── context/
-├── data/
-│ ├── raw/ # Original datasets (DHB, Zenodo, Kaggle)
-│ ├── processed/ # Cleaned data
-│ └── external/ # Reference stats, POPIA docs
-├── notebooks/ # Jupyter notebooks for EDA
-├── ml_training/ # Training scripts + saved models
-├── docs/ # Project documentation
-└── .github/ # GitHub templates + workflows
-
----
-
-## Data Sources
-
-| Dataset                                 | What It Provides                                                                 | Source                            |
-| --------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------- |
-| **District Health Barometer (2018/19)** | Real district-level medicine availability indicators                             | openAFRICA / Health Systems Trust |
-| **Zenodo PLMIF**                        | Supply chain risk variables (port delays, spoilage, risk score) for South Africa | Zenodo                            |
-| **Kaggle Pharmacy Dataset**             | Weekly demand, stock-on-hand, and stockout flags                                 | Kaggle                            |
-
-See `docs/data_sources.md` for full details.
-
----
-
-## Tech Stack
-
-| Tool                | Purpose                              |
-| ------------------- | ------------------------------------ |
-| Python              | Main language                        |
-| FastAPI             | Backend API                          |
-| React + Vite        | Frontend                             |
-| Tailwind CSS        | UI styling                           |
-| pandas / NumPy      | Data processing                      |
-| Prophet / ARIMA     | Demand forecasting                   |
-| scikit-learn        | Optimisation and classification      |
-| TensorFlow / Keras  | Anomaly detection                    |
-| spaCy               | Chatbot NLP                          |
-| SQLite / PostgreSQL | Database                             |
-| Docker              | Containerisation                     |
-| GitHub              | Version control and project tracking |
-
----
-
-## Team Workflow
-
-**Every task follows this chain:**
-
-1. Pick an **Issue** from the GitHub Project board.
-2. Create a **branch**: `feature/<issue-number>-short-description`.
-3. **Commit** with meaningful messages: `feat(forecast): add Prophet model (#5)`.
-4. Open a **Pull Request** and link the issue (`Closes #5`).
-5. Get a **review** from another member.
-6. **Merge** to `dev`, then to `main` at the end of the sprint.
-
-**Rules:**
-
-- No direct pushes to `main` or `dev`.
-- Every PR needs at least one review.
-- Every Sunday, we update `docs/contributions.md`.
-
----
+├── backend/            # FastAPI application
+│   ├── app/
+│   │   ├── api/        # REST endpoints
+│   │   ├── core/       # Database & config
+│   │   ├── models/     # SQLAlchemy models
+│   │   └── ml/         # Model loading (pkl)
+│   └── requirements.txt
+├── frontend/           # Flask dashboard
+│   ├── static/         # CSS, JS, and Images (Logo)
+│   ├── templates/      # HTML files
+│   └── app.py
+├── ChatBot/            # NLP training scripts & datasets
+├── data/               # Data storage
+│   ├── raw/            # DHB & Zenodo source files
+│   ├── processed/      # Cleaned CSV data
+│   └── plots/          # Generated evaluation charts
+├── docs/               # Project documentation & images
+├── ml_training/        # Colab Notebook & ML Models
+│   ├── Medicine_Demand_ML.ipynb
+│   └── saved_models/   # .pkl and .keras files
+├── generate_data.py    # Synthetic data calibration script
+└── migrate_data.py     # Script to push CSV to Supabase
+```
 
 ## Getting Started (Local Development)
 
-### Backend
+### 1. Backend (FastAPI)
 
 ```bash
 cd backend
 python -m venv .venv
-source .venv/bin/activate        # On Windows: .venv\Scripts\activate
+# On Windows: .venv\Scripts\activate
+# On Mac/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --reload-dir app
 ```
 
-Backend runs at http://localhost:8000
-API docs at http://localhost:8000/docs
+_API Docs available at `http://127.0.0.1:8000/docs`_
 
+### 2. Frontend (Flask)
+
+```bash
 cd frontend
-npm install
-npm run dev
-Frontend runs at http://localhost:5173
-
-Docker (Full Stack)
-docker-compose up --build
-
----
-
-Documentation
-All project documents are in docs/:
-
-proposal.md — Project proposal
-
-problem_definition.md — Problem statement
-
-requirements.md — Functional and non-functional requirements
-
-data_sources.md — Dataset descriptions and sources
-
-data_dictionary.md — Column definitions for each dataset
-
-architecture.md — System architecture
-
-contributions.md — Weekly contribution log
-
-deployment.md — Deployment instructions
-
----
-
----
-
-#### File 5: `docs/architecture.md`
-
-```markdown
-# UbuntuMed — System Architecture
-
-## Overview
-
-UbuntuMed is a three-layer system:
-
-1. **Presentation Layer (Frontend)** — React web app for clinic managers and nurses.
-2. **Application Layer (Backend)** — FastAPI server that handles business logic and serves ML predictions.
-3. **Data & Model Layer** — Databases, cleaned datasets, and trained ML models.
-
-## Diagram
-
-+---------------------------+
-| React Frontend (Vercel) |
-| Dashboard | Chatbot | UI |
-+-------------+-------------+
-|
-| HTTPS / REST
-v
-+---------------------------+
-| FastAPI Backend (Render) |
-| /stock /forecast |
-| /anomaly /redistribute |
-| /chatbot |
-+------+----------+---------+
-| | |
-v v v
-+-----------+ +--------+ +-----------+
-| Postgres | | ML | | NLP |
-| Database | | Models | | Chatbot |
-+-----------+ +--------+ +-----------+
+# Ensure the virtual environment is activated
+python app.py
 ```
 
-## Components
+_Dashboard available at `http://127.0.0.1:5000`_
 
-### Frontend
+## Live Deployment
 
-- **Framework:** React + Vite
-- **Styling:** Tailwind CSS
-- **Charts:** Recharts
-- **State:** React Context / hooks
-- **API calls:** Axios
+- **Dashboard:** [ubuntumed-dashboard.onrender.com](https://ubuntumed-dashboard.onrender.com/)
+- **Backend API:** [ubuntumed-api.onrender.com/docs](https://ubuntumed-api.onrender.com/docs)
+- **Database:** Supabase (PostgreSQL)
 
-### Backend
+## Team
 
-- **Framework:** FastAPI
-- **ORM:** SQLAlchemy
-- **Validation:** Pydantic
-- **Auth:** JWT (future)
-- **CORS:** Enabled for frontend URL
+- **M Mokgadi** (Project Manager & Lead Developer)
+- **KV Likethe**
+- **K Mokgothu**
+- **K Tabudi**
+- **C Seabela**
+- **L Tsotetsi**
+- **WK Mohlaka**
 
-### ML Models
+## References
 
-- **Forecasting:** Prophet / ARIMA (saved as `.pkl`)
-- **Anomaly Detection:** Autoencoder (saved as `.h5`)
-- **Redistribution:** scikit-learn logic (function-based)
-- **Chatbot NLP:** spaCy / scikit-learn intent classifier (`.pkl`)
-
-### Data
-
-- **Raw:** DHB, Zenodo PLMIF, Kaggle pharmacy
-- **Processed:** Cleaned and feature-engineered CSVs
-- **Database:** SQLite (dev) / PostgreSQL (prod)
-
-## Data Flow
-
-1. Raw datasets are cleaned by `data_cleaning.py`.
-2. Cleaned data is stored in `data/processed/` and loaded into the database.
-3. ML training scripts read cleaned data and save models to `ml_training/saved_models/`.
-4. FastAPI loads models at startup.
-5. Frontend calls API endpoints and displays results.
-
-## Deployment
-
-| Layer    | Platform           | URL                           |
-| -------- | ------------------ | ----------------------------- |
-| Frontend | Vercel             | `ubuntumed.vercel.app`        |
-| Backend  | Render             | `ubuntumed-api.onrender.com`  |
-| Database | Supabase / Railway | (connection string in `.env`) |
-
-## Security & Privacy
-
-- POPIA compliance: no patient-level data.
-- All data anonymised at facility level.
-- HTTPS only in production.
-- Environment variables for secrets.
-- CORS restricted to frontend URL.
+- Mabizela, S., Nakambale, H.N., & Bangalee, V. (2023). _Predictors of medicine redistribution at public healthcare facilities in King Cetshwayo District, KwaZulu-Natal, South Africa_. BMC Health Services Research.
+- Health Systems Trust. (2020). _District Health Barometer 2018/19_.
