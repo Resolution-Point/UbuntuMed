@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hospital Inventory & Analytics Dashboard</title>
+    <title>UbuntuMed Dashboard</title>
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -17,11 +17,19 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-  <body class="p-4">
+  <body class="p-3 p-md-4">
     <div class="container-fluid">
-      <h2 class="mb-4 text-primary fw-bold">
-        🏥 Hospital Medical Inventory & Reorder Dashboard
-      </h2>
+      <!-- Header with Logo -->
+      <div class="d-flex align-items-center mb-4">
+        <img
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          alt="UbuntuMed Logo"
+          style="height: 60px; margin-right: 15px"
+        />
+        <h2 class="text-primary fw-bold mb-0">
+          Medical Inventory & Reorder Dashboard
+        </h2>
+      </div>
 
       <!-- Form & Overview Section -->
       <div class="row g-4 mb-4">
@@ -52,7 +60,7 @@
               </div>
               <div class="row g-2 mb-2">
                 <div class="col-6">
-                  <label class="form-label">Quantity Received</label>
+                  <label class="form-label">Quantity</label>
                   <input
                     type="number"
                     name="quantity"
@@ -127,17 +135,14 @@
         </div>
       </div>
 
-      <!-- ========================================== -->
-      <!-- AI INSIGHTS CARD                            -->
-      <!-- ========================================== -->
+      <!-- AI Insights Card -->
       <div class="card p-4 mb-4">
-        <h5 class="text-primary mb-3">🤖 AI Insights</h5>
+        <h5 class="text-primary mb-3">AI Insights</h5>
         <div class="row g-3">
-          <!-- Forecast Model -->
           <div class="col-md-6">
             <div class="card p-3 h-100 border-start border-primary border-4">
               <h6 class="text-secondary mb-2">
-                📈 Demand Forecast (Random Forest Model)
+                Demand Forecast (Random Forest Model)
               </h6>
               {% if forecast and forecast.predicted_demand_30_days %}
               <p class="mb-1">
@@ -146,10 +151,9 @@
               <p class="text-primary fs-3 mb-0 fw-bold">
                 {{ forecast.predicted_demand_30_days }} units
               </p>
-              <small class="text-muted">
-                Predicted demand over the next 30 days
-                {% if forecast.source %}· source: {{ forecast.source }}{% endif %}
-              </small>
+              <small class="text-muted"
+                >Predicted demand over the next 30 days</small
+              >
               {% else %}
               <p class="text-muted mb-0">
                 Forecast unavailable. Waiting for backend.
@@ -157,37 +161,31 @@
               {% endif %}
             </div>
           </div>
-
-          <!-- Anomaly Detection -->
           <div class="col-md-6">
             <div class="card p-3 h-100 border-start border-warning border-4">
               <h6 class="text-secondary mb-2">
-                ⚠️ Anomaly Detection (Isolation Forest Model)
+                Anomaly Detection (Deep Learning)
               </h6>
-              {% if anomalies and anomalies.anomalies_detected and anomalies.details %}
-              {% for d in anomalies.details %}
+              {% if anomalies and anomalies.anomalies_detected and
+              anomalies.details %} {% for d in anomalies.details %}
               <div class="alert alert-warning py-2 px-3 mb-2">
                 <strong>{{ d.clinic }}</strong> — {{ d.medicine }}<br />
                 <small>{{ d.issue }}</small>
               </div>
-              {% endfor %}
-              {% else %}
+              {% endfor %} {% else %}
               <p class="text-success mb-0">
-                ✅ No unusual consumption patterns detected.
+                No unusual consumption patterns detected.
               </p>
               {% endif %}
             </div>
           </div>
         </div>
       </div>
-      <!-- ========================================== -->
-      <!-- END AI INSIGHTS CARD                        -->
-      <!-- ========================================== -->
 
       <!-- Reorder Procurement Recommendation Table -->
       <div class="card p-4 mb-4">
         <h5 class="text-danger mb-3">
-          🛒 Procurement Trend: Recommended Purchases
+          Procurement Trend: Recommended Purchases
         </h5>
         <div class="table-responsive">
           <table class="table table-hover align-middle">
@@ -232,9 +230,7 @@
 
       <!-- Full Storage Inventory Table -->
       <div class="card p-4">
-        <h5 class="text-secondary mb-3">
-          📦 Received Stock Inventory Register
-        </h5>
+        <h5 class="text-secondary mb-3">Received Stock Inventory Register</h5>
         <div class="table-responsive">
           <table class="table table-striped table-bordered align-middle">
             <thead class="table-dark">
@@ -272,8 +268,7 @@
               {% else %}
               <tr>
                 <td colspan="7" class="text-center">
-                  No inventory records available. Use the form above to add
-                  stock.
+                  No inventory records available.
                 </td>
               </tr>
               {% endfor %}
@@ -283,12 +278,16 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- CHATBOT WIDGET                             -->
-    <!-- ========================================== -->
-    <div id="chatbot-widget">
+    <!-- Floating Chat Toggle Button -->
+    <button id="chat-toggle-btn" class="chat-toggle-btn" onclick="toggleChat()">
+      Chat with AI
+    </button>
+
+    <!-- Chatbot Widget (Hidden by default) -->
+    <div id="chatbot-widget" class="chatbot-hidden">
       <div class="chatbot-header">
-        <span>💬 UbuntuMed Assistant</span>
+        <span>UbuntuMed Assistant</span>
+        <button class="chat-close-btn" onclick="toggleChat()">&times;</button>
       </div>
 
       <div id="chat-messages" class="chat-messages">
@@ -329,9 +328,7 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- CHART DATA (Safely embedded as JSON)       -->
-    <!-- ========================================== -->
+    <!-- Chart Data Script -->
     <script id="chart-data" type="application/json">
       {
         "expiry": {{ expiry_chart_data | tojson }},
@@ -345,6 +342,21 @@
 
     <!-- Chatbot JS -->
     <script>
+      function toggleChat() {
+        const widget = document.getElementById("chatbot-widget");
+        const btn = document.getElementById("chat-toggle-btn");
+
+        if (widget.classList.contains("chatbot-hidden")) {
+          widget.classList.remove("chatbot-hidden");
+          widget.classList.add("chatbot-visible");
+          btn.style.display = "none";
+        } else {
+          widget.classList.remove("chatbot-visible");
+          widget.classList.add("chatbot-hidden");
+          btn.style.display = "block";
+        }
+      }
+
       function sendQuickReply(text) {
         document.getElementById("chat-input").value = text;
         sendMessage();
@@ -356,16 +368,10 @@
         if (!text) return;
 
         const messages = document.getElementById("chat-messages");
-
-        // Add user message
-        messages.innerHTML += `
-            <div class="message-user-wrapper">
-                <span class="message-user">${text}</span>
-            </div>`;
+        messages.innerHTML += `<div class="message-user-wrapper"><span class="message-user">${text}</span></div>`;
         input.value = "";
         messages.scrollTop = messages.scrollHeight;
 
-        // Send to backend
         try {
           const response = await fetch(
             "https://ubuntumed-api.onrender.com/chatbot",
@@ -376,15 +382,10 @@
             },
           );
           const data = await response.json();
-
-          messages.innerHTML += `
-                <div class="message-bot-wrapper">
-                    <span class="message-bot-response">${data.bot_reply}</span>
-                </div>`;
+          messages.innerHTML += `<div class="message-bot-wrapper"><span class="message-bot-response">${data.bot_reply}</span></div>`;
         } catch (error) {
           messages.innerHTML += `<div class="message-error">Error connecting to AI.</div>`;
         }
-
         messages.scrollTop = messages.scrollHeight;
       }
 

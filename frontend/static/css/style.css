@@ -1,5 +1,5 @@
 /* ==========================================
-   BASE STYLES
+   BASE STYLES & RESPONSIVE DESIGN
    ========================================== */
 body {
   background-color: #f4f7f6;
@@ -14,15 +14,15 @@ body {
 
 .badge-expired {
   background-color: #dc3545;
+  color: white;
 }
-
 .badge-warning {
   background-color: #ffc107;
   color: #000000;
 }
-
 .badge-valid {
   background-color: #198754;
+  color: white;
 }
 
 .chart-container {
@@ -31,14 +31,51 @@ body {
   width: 100%;
 }
 
+/* Mobile Responsiveness Adjustments */
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.5rem;
+  }
+  .card {
+    padding: 1rem !important;
+  }
+  .chart-container {
+    height: 200px;
+  }
+}
+
 /* ==========================================
-   CHATBOT WIDGET
+   CHATBOT WIDGET (COLLAPSIBLE)
    ========================================== */
+
+/* The floating button to open the chat */
+.chat-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.2s;
+}
+
+.chat-toggle-btn:hover {
+  transform: scale(1.05);
+}
+
+/* The main chat window */
 #chatbot-widget {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 320px;
+  width: 350px;
   background: #ffffff;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -48,15 +85,41 @@ body {
   flex-direction: column;
 }
 
+/* Hide/Show logic */
+.chatbot-hidden {
+  display: none !important;
+}
+.chatbot-visible {
+  display: flex !important;
+}
+
+/* Mobile view for chat window */
+@media (max-width: 768px) {
+  #chatbot-widget {
+    width: 90%;
+    right: 5%;
+    bottom: 80px;
+  }
+}
+
 .chatbot-header {
   background: #0d6efd;
   color: #ffffff;
-  padding: 10px;
+  padding: 10px 15px;
   border-radius: 10px 10px 0 0;
   font-weight: bold;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.chat-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
 }
 
 .chat-messages {
@@ -79,7 +142,6 @@ body {
   text-align: right;
   margin-bottom: 8px;
 }
-
 .message-user {
   background: #0d6efd;
   color: #ffffff;
@@ -94,7 +156,6 @@ body {
   text-align: left;
   margin-bottom: 8px;
 }
-
 .message-bot-response {
   background: #e2e3e5;
   padding: 8px;
@@ -109,7 +170,6 @@ body {
   margin-bottom: 8px;
 }
 
-/* Quick reply buttons */
 .quick-replies {
   padding: 5px 10px;
   display: flex;
@@ -135,7 +195,6 @@ body {
   color: #ffffff;
 }
 
-/* Chat input area */
 .chat-input-area {
   display: flex;
   padding: 10px;
@@ -146,7 +205,7 @@ body {
 
 .chat-input {
   flex: 1;
-  padding: 5px;
+  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 3px;
   margin-right: 5px;
@@ -157,7 +216,7 @@ body {
   background: #0d6efd;
   color: #ffffff;
   border: none;
-  padding: 5px 12px;
+  padding: 8px 15px;
   border-radius: 3px;
   cursor: pointer;
 }
